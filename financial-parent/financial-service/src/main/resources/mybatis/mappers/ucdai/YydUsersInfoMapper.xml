@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao2.YydUsersInfoDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.YydUsersInfo">
+	</resultMap>
+
+	<select id="getUserInfoByUid" parameterType="String" resultType="com.mobanker.financial.entity.YydUsersInfo">
+		select * from yyd_users_info where user_id = #{uid}
+	</select>
+
+	<update id="updateUserInfo">
+		update yyd_users_info 
+		set sex =#{sex},birthday=#{birthday},type_id = #{typeId},status=#{status},
+		realname=#{realname},realname_status=#{realnameStatus},realname_times=#{realnameTimes},
+		phone=#{phone},phone_status=#{phoneStatus} where user_id = #{userId}
+	</update>
+	
+	<!-- 获取某日注册用户数 -->
+	<select id="getRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+	SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id) WHERE 1=1
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	<!-- 获取某日理财注册用户 -->
+	<select id="getFinanceRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+		 SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id)
+		WHERE (yu.reg_from = 'finance_my' OR yu.reg_from = 'finance')
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	<!-- 获取某日激活用户数  -->
+	<select id="getActivUserNum" parameterType="map" resultType="Integer">
+			 SELECT COUNT(1) FROM(
+		 SELECT DISTINCT(device_identify) FROM yyd_activation_first ya 
+		     WHERE ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		     AND ya.`version` &gt;= '3.6.0'
+		 ) t
+	</select>
+	
+	<!-- 获取ios理财注册人数 -->
+	<select id="getIosFinanceRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+	 SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id)
+		WHERE (yu.reg_from = 'finance_my' OR yu.reg_from = 'finance')
+		  AND (yui.`download_channel` = 'appstore' OR yui.`download_channel` LIKE '%-ios')
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	<!-- 获取android理财注册人数 -->
+	<select id="getAndroidFinanceRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+		SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id)
+		WHERE (yu.reg_from = 'finance_my' OR yu.reg_from = 'finance')
+		  AND (yui.`download_channel` LIKE '%-android')
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	
+	<!-- 获取某日ios注册用户数 -->
+	<select id="getIOSRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+		SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id)
+		WHERE 1=1
+		  AND (yui.`download_channel` = 'appstore' OR yui.`download_channel` LIKE '%-ios')
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	<!-- 获取某日ios激活用户数  -->
+	<select id="getIOSActivUserNum" parameterType="map" resultType="Integer">
+		 SELECT COUNT(1) FROM (SELECT 
+		   DISTINCT(device_identify)
+		  FROM yyd_activation_first
+		  WHERE 
+		    (channel = 'appstore' OR channel LIKE '%-ios')
+		   AND create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+		      AND VERSION &gt;= '3.6.0') t
+			 <!--  SELECT COUNT(1) FROM (SELECT 
+		   DISTINCT(ya.device_identify)
+		  FROM yyd_activation_first ya LEFT JOIN yyd_users_info yui ON (ya.`device_identify` = yui.`reg_device_identify` ) 
+		  WHERE 
+		    (yui.`download_channel` = 'appstore' OR yui.`download_channel` LIKE '%-ios')
+		   AND ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+		      AND ya.`version` &gt;= '3.6.0') t -->
+	</select>
+	
+	<!-- 获取所有IOS的uid -->
+	<select id="getIOSUid" resultType="string">
+		SELECT user_id FROM yyd_users_info  WHERE (download_channel='appstore' OR download_channel LIKE '%-ios')
+	</select>
+	
+	<!-- 获取某日Android注册用户数 -->
+	<select id="getAndroidRegUserNum" parameterType="map" resultType="com.mobanker.financial.vo.YydRegisterVo">
+		SELECT yu.`user_id`, yui.register_version FROM yyd_users yu LEFT JOIN yyd_users_info yui ON (yu.user_id = yui.user_id)
+		WHERE 1=1
+		  AND (yui.`download_channel` LIKE '%-android')
+		  AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	</select>
+	
+	<!-- 获取某日Android激活用户数  -->
+	<select id="getAndroidActivUserNum" parameterType="map" resultType="Integer">
+		 SELECT COUNT(1) FROM (SELECT 
+		   DISTINCT(device_identify)
+		  FROM yyd_activation_first
+		  WHERE 
+		    (channel LIKE '%-android')
+		   AND create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+		      AND VERSION &gt;= '3.6.0') t
+		<!--  SELECT COUNT(1) FROM (SELECT 
+		   DISTINCT(ya.device_identify)
+		  FROM yyd_activation_first ya LEFT JOIN yyd_users_info yui ON (ya.`device_identify` = yui.`reg_device_identify` ) 
+		  WHERE 
+		    (yui.`download_channel` LIKE '%-android')
+		   AND ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+		      AND ya.`version` &gt;= '3.6.0') t -->
+	</select>
+	
+	<!-- 获取所有Android的uid -->
+	<select id="getAndroidUid" resultType="string">
+		SELECT user_id FROM yyd_users_info  WHERE (download_channel LIKE '%-android')
+	</select>
+	
+	
+	<!--查询 某日 每个渠道的 注册用户数量-->
+	<select id="queryDownloadChannelUserNum" parameterType="map" resultType="com.mobanker.financial.vo.DownloadChannelUserCountVo">
+	 SELECT 
+		  COUNT(1) counts,
+		  yui.download_channel,
+		  yui.`register_version` version
+		FROM
+		  yyd_users_info yui 
+		  LEFT JOIN yyd_users yu 
+		    ON (yui.user_id = yu.user_id) 
+		WHERE 1=1
+		AND yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) and yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		 GROUP BY  yui.download_channel, yui.`register_version`
+		  
+		<!-- SELECT 
+		  yui.download_channel,
+		  COUNT(1) counts
+		FROM
+		  yyd_users_info yui 
+		  LEFT JOIN yyd_users yu 
+		    ON (yui.user_id = yu.user_id) 
+		WHERE yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) and yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		GROUP BY yui.download_channel  -->
+	</select> 
+	
+	
+	<select id="queryFinanceDownloadChannelUserNum" parameterType="map" resultType="com.mobanker.financial.vo.DownloadChannelUserCountVo">
+		 SELECT 
+		  yui.`register_version` version
+		FROM
+		  yyd_users_info yui 
+		  LEFT JOIN yyd_users yu 
+		    ON (yui.user_id = yu.user_id) 
+		WHERE (
+		    yu.reg_from = 'finance_my' 
+		    OR yu.reg_from = 'finance'
+		  ) and  yui.download_channel = #{download_channel}
+		  and yu.reg_time &gt;= UNIX_TIMESTAMP(#{beginTime}) and yu.reg_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		 
+	</select> 
+	
+	
+	<!-- 查询某日每个渠道的激活用户数量-->
+	<select id="queryDownloadChannelActivNum" parameterType="map" resultType="com.mobanker.financial.vo.DownloadChannelUserCountVo">
+		 SELECT 
+		   (SELECT COUNT(1) FROM(
+		 SELECT DISTINCT(device_identify) FROM yyd_activation_first ya 
+		     WHERE ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		    AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		     AND ya.`version` &gt;= '3.6.0'
+		 ) t )counts,
+		  channel downloadChannel 
+		FROM
+		  yyd_activation_first 
+		WHERE create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND create_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		  AND `version` &gt;= '3.6.0' 
+		GROUP BY channel 
+	
+		<!-- SELECT 
+		  COUNT(DISTINCT (device_identify)) counts,
+		  channel downloadChannel 
+		FROM
+		  yyd_activation_first 
+		WHERE create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+		  AND create_time &lt;= UNIX_TIMESTAMP(#{endTime}) 
+		  AND `version` &gt;= '3.6.0' 
+		GROUP BY channel  -->
+		<!-- SELECT COUNT(DISTINCT(ya.device_identify)) counts,
+	    yui.download_channel
+	
+	  FROM
+	  yyd_activation_first ya 
+	    
+	    LEFT JOIN yyd_users_info yui 
+	      ON (
+		yui.`reg_device_identify` = ya.`device_identify`
+	      ) 
+	   WHERE ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+	    AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+	      AND ya.`version` &gt;= '3.6.0'
+			GROUP BY  yui.download_channel -->
+		
+		<!--  SELECT 
+		  COUNT(1) counts,
+		  t.download_channel,
+		   t.version
+		FROM
+		  (SELECT 
+		    yui.download_channel,
+		    MIN(ya.create_time) create_time,
+		    ya.`version`
+		  FROM
+		    yyd_users_info yui 
+		    LEFT JOIN yyd_activation ya 
+		      ON (
+		        yui.`reg_device_identify` = ya.`device_identify`
+		      ) 
+		   WHERE ya.create_time &gt;= UNIX_TIMESTAMP(#{beginTime}) 
+			AND ya.create_time &lt;= UNIX_TIMESTAMP(#{endTime})
+		  GROUP BY ya.create_time
+		) t GROUP BY t.download_channel  -->
+	</select>
+	
+	<!-- 根据渠道获取uid -->
+	<select id="getUidByChannel" parameterType="string" resultType="string">
+		SELECT user_id FROM yyd_users_info WHERE download_channel = #{0}
+	</select>
+	
+	<select id="getChannelByUid" parameterType="string" resultType="string">
+		SELECT download_channel FROM yyd_users_info WHERE user_id = #{0}
+	</select>
+	
+	
+	<select id="getDataByUid" parameterType="string" resultType="com.mobanker.financial.vo.YydDataVo">
+		SELECT app_version, download_channel FROM yyd_users_info WHERE user_id = #{0}
+	</select>
+	
+	<select id="getAllChannel" resultType="string">
+		SELECT DISTINCT download_channel FROM yyd_users_info
+	</select>
+</mapper>

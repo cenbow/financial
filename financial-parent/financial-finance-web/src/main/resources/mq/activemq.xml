@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- ActiveMQ -->
+
+	<!-- 配置JMS连接工厂 -->
+	<bean id="jmsConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="${activemq.brokerURL}" />
+	</bean>
+
+	<!-- 配置QueueJMS模版 -->
+	<bean id="queueJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="pubSubDomain" value="false" />
+	</bean>
+
+	<!-- 配置TopicJMS模版 -->
+	<bean id="topicJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="pubSubDomain" value="true" />
+	</bean>
+
+	<!-- 发布标的主题 -->
+	<bean id="tenderReleaseQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>LCTenderReleaseQueue</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 补标队列 -->
+	<bean id="completionTenderQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg>
+			<value>LC_Completion_Tender_Queue</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 投标成功主题 -->
+	<bean id="lcBidTenderTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg>
+			<value>VirtualTopic.LC_Bid_Tender_Topic</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 用户收益主题 -->
+	<bean id="lcUserIncomeTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg>
+			<value>VirtualTopic.LC_User_Income_Topic</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 用户还款主题 -->
+	<bean id="userRefundTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg>
+			<value>VirtualTopic.LC_User_Refund_Topic</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 理财活动打款消息队列 -->
+	<bean id="rewarMoneyQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>ActivityRewardMoneyQueue</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 财务打款成功通知 -->
+	<bean id="activitySuccNoticeTopic" class="org.apache.activemq.command.ActiveMQTopic">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg>
+			<value>VirtualTopic.ActivitySuccNoticeTopic</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 打款成功消息监听 -->
+	<bean id="rewardMoneyQueueListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<property name="delegate">
+			<bean class="com.mobanker.financial.service.ActivityRewardMoneyService" />
+		</property>
+		<property name="defaultListenerMethod" value="receive" />
+	</bean>
+
+	<bean id="rewardMoneyQueueListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="activitySuccNoticeTopic" />
+		<property name="messageListener" ref="rewardMoneyQueueListener" />
+		<property name="pubSubDomain" value="true" />
+	</bean>
+</beans>  

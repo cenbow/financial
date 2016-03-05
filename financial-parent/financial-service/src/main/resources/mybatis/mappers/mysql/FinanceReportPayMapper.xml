@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceReportPayDao">
+	<resultMap id="getMap"
+		type="com.mobanker.financial.entity.FinanceReportPay">
+	</resultMap>
+	
+	<select id="getFinanceReportPayByAcutalDate" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  `finance_report_pay` t 
+		WHERE date(t.`actual_date`) = #{date}
+	</select>
+</mapper>

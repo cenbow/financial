@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceDailyDao">
+
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceDaily"></resultMap>
+	
+	
+	<select id="getYesterdayIOSTotalInvestNum" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT ifnull(ios_total_invest,0) FROM finance_report_daily WHERE DATE(daily_date) &gt;= DATE(#{0})
+			AND DATE(daily_date) &lt;= DATE(#{0})
+	</select>
+	
+	<select id="getYesterdayIOSTotalInvestAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT ifnull(ios_total_invest_amount,0) FROM finance_report_daily WHERE DATE(daily_date) &gt;= DATE(#{0})
+		AND DATE(daily_date) &lt;= DATE(#{0})
+	</select>
+	
+	<select id="getYesterdayAndroidTotalInvestNum" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT ifnull(android_total_invest,0) FROM finance_report_daily WHERE DATE(daily_date) &gt;= DATE(#{0})
+		AND DATE(daily_date) &lt;= DATE(#{0})
+	</select>
+	
+	<select id="getYesterdayAndroidTotalInvestAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT ifnull(android_total_invest_amount,0) FROM finance_report_daily WHERE DATE(daily_date) &gt;= DATE(#{0})
+		AND DATE(daily_date) &lt;= DATE(#{0})
+	</select>
+	
+	
+	<delete id="deleteByDaily" parameterType="string">
+		delete from finance_report_daily where daily_date = #{0}
+	</delete>
+</mapper>

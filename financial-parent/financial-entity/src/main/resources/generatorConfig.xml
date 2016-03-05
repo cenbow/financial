@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+
+<generatorConfiguration>
+	<classPathEntry location="F:\l_library\mysql-connector-java-5.1.26-bin.jar" />
+
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/finance?useUnicode=true&amp;characterEncoding=UTF-8"
+			userId="root" password="123456">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="com.mobanker.financial.entity"
+			targetProject="MAVEN">
+			<property name="enableSubPackages" value="false" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<sqlMapGenerator targetPackage="mybatis.mappers.mysql"
+			targetProject="MAVEN">
+			<property name="enableSubPackages" value="false" />
+		</sqlMapGenerator>
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.mobanker.financial.dao" targetProject="MAVEN"
+			implementationPackage="com.mobanker.financial.dao.impl">
+			<property name="enableSubPackages" value="false" />
+		</javaClientGenerator>
+
+		<table tableName="FINANCE_BANK_CARD" domainObjectName="FinanceBankCard" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_BANK_LIMIT" domainObjectName="FinanceBankLimit" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_BANNER" domainObjectName="FinanceBanner" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_COMMON_CFG" domainObjectName="FinanceCommonCfg" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_COUPON" domainObjectName="FinanceCoupon" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_COUPON_CFG" domainObjectName="FinanceCouponCfg" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_DEPOSIT_WITHDRAW" domainObjectName="FinanceDepositWithdraw" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_ERROR_PWD" domainObjectName="FinanceErrorPwd" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_FINANCING_USER" domainObjectName="FinanceFinancingUser" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_FREEZE" domainObjectName="FinanceFreeze" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_INCOME" domainObjectName="FinanceIncome" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_INVEST_USER" domainObjectName="FinanceInvestUser" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_INVITE_TENDER_END" domainObjectName="FinanceInviteTenderEnd" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_MQ_CONSUMER_LOG" domainObjectName="FinanceMqConsumerLog" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_MQ_PRODUCER_LOG" domainObjectName="FinanceMqProducerLog" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REFUND_STATISTICS" domainObjectName="FinanceRefundStatistics" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPAY_PLAN" domainObjectName="FinanceRepayPlan" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPAY_PLAN_DETAIL" domainObjectName="FinanceRepayPlanDetail" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPORT_CHANNEL" domainObjectName="FinanceReportChannel" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPORT_COLLECT" domainObjectName="FinanceReportCollect" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPORT_DAILY" domainObjectName="FinanceReportDaily" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_REPORT_PAY" domainObjectName="FinanceReportPay" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_SMS_VERIFY_LOG" domainObjectName="FinanceSmsVerifyLog" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+
+		<table tableName="FINANCE_SUBMIT_TENDER" domainObjectName="FinanceSubmitTender" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+		
+		<table tableName="FINANCE_TENDER_CFG" domainObjectName="FinanceTenderCfg" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+		
+		<table tableName="FINANCE_TRADE" domainObjectName="FinanceTrade" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+		
+		<table tableName="FINANCE_UID_MAPPING" domainObjectName="FinanceUidMapping" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+		
+		<table tableName="FINANCE_WITHDRAW_CASH" domainObjectName="FinanceWithdrawCash" enableInsert="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableCountByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+			<ignoreColumn column="ID" />
+			<ignoreColumn column="CREATE_TIME" />
+			<ignoreColumn column="CREATE_USER" />
+			<ignoreColumn column="UPDATE_TIME" />
+			<ignoreColumn column="UPDATE_USER" />
+		</table>
+	</context>
+</generatorConfiguration>

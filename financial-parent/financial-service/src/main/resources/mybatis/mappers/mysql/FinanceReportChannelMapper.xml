@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceReportChannelDao">
+
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceReportChannel"></resultMap>
+	
+	<delete id="deleteByDaily" parameterType="string">
+		DELETE FROM finance_report_channel WHERE channel_date = #{0}
+	</delete>
+	
+</mapper>

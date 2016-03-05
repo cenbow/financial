@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceInviteTenderEndDao">
+	<resultMap id="getMap"
+		type="com.mobanker.financial.entity.FinanceInviteTenderEnd">
+	</resultMap>
+	
+	<select id="getTenderEndById" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  `finance_invite_tender_end` t 
+		WHERE t.`sid` = #{tenderId} limit 1
+	</select>
+	
+	<select id="getBySelfId" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  `finance_invite_tender_end` t 
+		WHERE t.`id` = #{id} limit 1
+	</select>
+</mapper>

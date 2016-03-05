@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceDepositWithdrawDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceDepositWithdraw">
+	</resultMap>
+
+	<select id="getLatestDepostRecord" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  `finance_deposit_withdraw` t 
+		WHERE t.`uid` = #{uid} 
+		AND t.`record_type` = 'deposit'
+		ORDER BY t.`create_time` DESC 
+		LIMIT 1 
+	</select>
+	
+	<select id="getDepositRecordByDate" parameterType="String" resultType="String">
+		SELECT 
+		  DISTINCT(t.`uid`) 
+		FROM
+		  `finance_deposit_withdraw` t 
+		WHERE t.`record_type` = 'deposit'
+		AND t.`status` = 'SUCCESS'
+		<if test="date != null and date != ''">
+			AND date(t.`create_time`) = date(#{date})
+		</if>
+	</select>
+	
+	<select id="getDataByDate" parameterType="string" resultType="string">
+		SELECT DISTINCT uid FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND STATUS = 'SUCCESS' 
+		AND DATE(create_time) &gt;= DATE(#{0})
+		AND DATE(create_time) &lt;= DATE(#{0})
+	</select>
+	
+		<!-- 获取累计充值用户数量 -->
+	<select id="getTotalDepositNum" resultType="string">
+		 SELECT DISTINCT uid FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND STATUS = 'SUCCESS' and uid not in (select uid from finance_financing_user) 
+	</select>
+	
+		<!-- 获取用户累计充值金额 -->
+	<select id="getTotalDepositAmount" resultType="java.math.BigDecimal">
+		 SELECT IFNULL(SUM(amount),0) FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND STATUS = 'SUCCESS' and uid not in (select uid from finance_financing_user)
+	</select>
+	
+	<select id="getgetRechargeAmount" parameterType="string" resultType="java.math.BigDecimal">
+	  SELECT IFNULL(SUM(amount),0) FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND `status` = 'SUCCESS' AND uid = #{0}
+		AND DATE(create_time) &gt;= DATE(#{1}) 
+		AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+		<!-- 获取某日提现用户数量 -->
+	<select id="getWithdrawNum" parameterType="string" resultType="string">
+		 SELECT DISTINCT uid FROM finance_deposit_withdraw WHERE record_type = 'withdraw' AND STATUS = 'SUCCESS' AND DATE(create_time) &gt;= DATE(#{0})
+			AND DATE(create_time) &lt;= DATE(#{0})
+	</select>
+	
+		<!-- 获取某日用户提现金额 -->
+	<select id="getWithdrawAmount" parameterType="string" resultType="java.math.BigDecimal">
+		 SELECT IFNULL(SUM(amount),0) FROM finance_deposit_withdraw WHERE record_type = 'withdraw' AND STATUS = 'SUCCESS' and uid = #{0} AND DATE(create_time) &gt;= DATE(#{1})
+			AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+	<select id="getRechargeDateByUidNODate" parameterType="string" resultType="Integer">
+		SELECT IFNULL(COUNT(1),0) FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND `status` = 'SUCCESS' AND uid = #{0} 
+	</select>
+	
+		<!-- 获取某日ios的充值用户 -->
+	<select id="getIOSDepositNum" parameterType="string" resultType="int">
+		 SELECT COUNT(1) FROM finance_deposit_withdraw WHERE record_type = 'deposit' 
+			AND STATUS = 'SUCCESS' 
+			AND uid = #{0}
+			AND DATE(create_time) &gt;= DATE(#{1})
+			AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+		<!-- 获取某日 ios用户的充值金额 -->
+	<select id="getIOSDepositAmount" parameterType="string" resultType="java.math.BigDecimal">
+		 SELECT IFNULL(SUM(amount),0) FROM finance_deposit_withdraw WHERE record_type = 'deposit' 
+			AND STATUS = 'SUCCESS' 
+			AND uid = #{0}
+			AND DATE(create_time) &gt;= DATE(#{1})
+			AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+	<!-- 获取ios充值的新用户和老用户 -->
+	<select id="getIOSNewAndOldDepositNum" parameterType="string" resultType="Integer">
+		SELECT COUNT(1) FROM finance_deposit_withdraw WHERE record_type = 'deposit' 
+		AND STATUS = 'SUCCESS' 
+		AND uid = #{0}
+	</select>
+	
+	<select id="getIOSNewDepositNum" parameterType="string" resultType="Integer">
+		SELECT COUNT(1) FROM finance_deposit_withdraw WHERE record_type = 'deposit' 
+		AND STATUS = 'SUCCESS' 
+		AND uid = #{0}
+		AND DATE(create_time) &gt;= DATE(#{1})
+		AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+	<select id="getUserRechargeAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount), 0) FROM finance_deposit_withdraw WHERE record_type = 'deposit' AND `status` = 'SUCCESS' AND uid = #{0} 
+		AND DATE(create_time) &gt;= DATE(#{1}) 
+		AND DATE(create_time) &lt;= DATE(#{1})
+	</select>
+	
+	
+	
+</mapper>

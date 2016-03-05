@@ -1,0 +1,36 @@
+/******全局样式******/
+body,div,h1,h2,h3,h4,h5,h6,p,form,dl,dt,dd,ul,ol,li,input,select,button,textarea,table,th,td,img,table{margin: 0;padding: 0;border: 0;}
+ul,ol{list-style: none;}
+i,em{font-style: normal;}
+body,input,textarea,select,button{font-family: "microsoft yahei",tahoma,sans-serif;/*避免用户电脑没有某种字体*/font-size: 14px;}
+a{text-decoration: none;}
+img{display: block;}
+
+/*公有样式*/
+a{display: block;font-size: 16px;color:#fff;height: 40px;background-color: #0ba3f2;text-align: center;line-height: 40px;border-radius: 10px;}
+
+/*********内部系统接口**********/
+#port{width: 100%;margin: 0 auto;font-size: 16px;}
+.port{
+    width: 230px;
+    margin: 20px auto;
+}
+
+/***********表单，表格样式***********/
+.container{width: 950px;margin: 0 auto;}
+.list{margin: 100px 0 0 45px;width: 400px;float: left;border: 1px solid  #c7cacb;padding: 15px 10px;}
+.list h3{text-align: center;padding: 5px 0;font-weight: normal;}
+.list ul li{padding: 10px 0;}
+.list input{text-indent: 5px;margin-left: 4px;width: 260px;}
+.list input,.list select{height: 25px;border: 1px solid #c7cacb;}
+.list select{width: 262px;}
+.save{width: 150px;margin: 10px auto;cursor: pointer;}
+
+
+/************历史账单***********/
+#history{width: 300px !important;}
+#history input{width: 200px !important;}
+#resultHistory{width: 500px;}
+#resultHistory table{width: 500px;}
+#resultHistory table th,table td{width: 83px;height: 30px;text-align: center;}
+

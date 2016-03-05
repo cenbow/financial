@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" >
+        <property name="applicationContextSchedulerContextKey"  value="applicationContextKey" />
+        <property name="autoStartup" value="true" />
+        <property name="triggers">
+            <list>
+                <ref bean="tenderReleaseTrigger" />
+                <ref bean="tenderCompletionTrigger" />
+                <ref bean="repairFailedTradeTrigger" />
+                <ref bean="batchPayToCardTradeTrigger" />
+                <ref bean="repairBatchPayToCardTrigger" />
+                <ref bean="investorIncomeUpdateTrigger" />
+                <ref bean="tenderStatusChangeTrigger" />
+                <ref bean="unlockSecretTrigger" />
+                <ref bean="refoundStatisticsTrigger" />
+                <ref bean="reportColletionDetailTrigger" />
+                <ref bean="reportPaymentDetailTrigger" />
+                <ref bean="investorGuidTipsYesterdayTrigger" />
+                <ref bean="financeDailyTrigger" />
+                <ref bean="reportChannelTrigger" />
+            </list>
+        </property>
+    </bean>
+    
+    <!-- 日报定时任务-->
+    <bean id="reportDailyBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="reportDailyTask"></property>
+    	<property name="targetMethod" value="execu"></property>
+    </bean>
+    <bean id="financeDailyTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    	<property name="jobDetail" ref="reportDailyBean"></property>
+    	<property name="cronExpression" value="10 10 1 * * ?" />
+    	<!-- <property name="cronExpression" value="0 0/1 * * * ?" /> -->
+    </bean>
+     
+    <!-- 渠道定时任务 -->
+    <bean id="reportChannelBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="reportChannelTask"></property>
+    	<property name="targetMethod" value="execu"></property>
+    </bean>
+    <bean id="reportChannelTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    	<property name="jobDetail" ref="reportChannelBean"></property>
+    	<property name="cronExpression" value="10 10 2 * * ?" />
+    	<!-- <property name="cronExpression" value="0 0/1 * * * ?" /> -->
+    </bean>
+     
+    <!--标的发布任务 -->
+    <bean id="tenderReleaseTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="tenderReleaseTask"></property>
+        <property name="targetMethod" value="tenderRelease"></property>
+    </bean>
+    <bean id="tenderReleaseTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tenderReleaseTaskBean" />
+        <property name="cronExpression" value="0 00,30 8-21 * * ?" />
+    </bean>
+    <!--标的发布任务 -->
+    
+    <!--招标完成 -->
+    <bean id="tenderCompletionTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="tenderCompletionTask"></property>
+        <property name="targetMethod" value="investorTenderEnd"></property>
+    </bean>
+    <bean id="tenderCompletionTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="tenderCompletionTaskBean" />
+        <property name="cronExpression" value="0 00,30 8-21 * * ?" />
+    </bean>
+    <!--招标完成  -->
+    
+    <!--解冻代收修复 -->
+    <bean id="repairFailedTradeTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="repairFailedTradeTask"></property>
+        <property name="targetMethod" value="doRepair"></property>
+    </bean>
+    <bean id="repairFailedTradeTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="repairFailedTradeTaskBean" />
+        <property name="cronExpression" value="0 30 21 * * ?" />
+    </bean>
+    <!--解冻代收修复 -->
+    
+    
+    <!--批量代付到卡 -->
+    <bean id="batchPayToCardTradeTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="batchPayToCardTradeTask"></property>
+        <property name="targetMethod" value="batchPayToCardTrade"></property>
+    </bean>
+    <bean id="batchPayToCardTradeTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="batchPayToCardTradeTaskBean" />
+        <property name="cronExpression" value="0 0 22 * * ?" />
+    </bean>
+    <!--批量代付到卡 -->
+    
+    <!--批量代付到卡修复 -->
+    <bean id="repairBatchPayToCardTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="repairBatchPayToCardTask"></property>
+        <property name="targetMethod" value="doRepair"></property>
+    </bean>
+    <bean id="repairBatchPayToCardTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="repairBatchPayToCardTaskBean" />
+        <property name="cronExpression" value="0 0 23 * * ?" />
+    </bean>
+    <!--批量代付到卡修复 -->
+    
+    <!-- 收益计算任务 -->
+    <bean id="incomeCalculationTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" >
+        <property name="targetObject" ref="incomeCalculationTask"></property>
+        <property name="targetMethod" value="incomeCalculate"></property>
+    </bean>
+    <bean id="investorIncomeUpdateTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="incomeCalculationTaskBean" />
+        <property name="cronExpression" value="0 0 2 * * ?" />
+    </bean>
+    <!--收益计算任务 -->
+    
+    <!-- 开始收益状态更改 -->
+    <bean id="tenderStatusChangeBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="tenderStatusChangeTask"></property>
+        <property name="targetMethod" value="tenderStatusChange"></property>
+    </bean>
+    <bean id="tenderStatusChangeTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="tenderStatusChangeBean" />
+        <property name="cronExpression" value="10 0 0 * * ?" />
+    </bean>
+    <!-- 开始收益状态更改 -->
+    
+    <!-- 锁定密码解锁 -->
+    <bean id="unlockSecretBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="unlockSecretTask"></property>
+        <property name="targetMethod" value="unlockSecret"></property>
+    </bean>
+    <bean id="unlockSecretTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="unlockSecretBean" />
+        <property name="cronExpression" value="0 0/10 * * * ?" />
+    </bean>
+    <!-- 锁定密码解锁 -->
+    
+    <!-- 还款统计 -->
+    <bean id="refoundStatisticsTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="refoundStatisticsTask"></property>
+        <property name="targetMethod" value="refoundStatistics"></property>
+    </bean>
+    <bean id="refoundStatisticsTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="refoundStatisticsTaskBean" />
+        <property name="cronExpression" value="0 30 1 * * ?" />
+    </bean>
+    <!-- 还款统计 -->
+    
+    <!-- 实收明细 -->
+    <bean id="reportColletionDetailTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="reportColletionDetailTask"></property>
+        <property name="targetMethod" value="doActualPaymentDetail"></property>
+    </bean>
+    <bean id="reportColletionDetailTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="reportColletionDetailTaskBean" />
+        <property name="cronExpression" value="0 20 2 * * ?" />
+    </bean>
+    <!-- 实收明细 -->
+    
+    <!-- 实付明细 -->
+    <bean id="reportPaymentDetailTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="reportPaymentDetailTask"></property>
+        <property name="targetMethod" value="reportPaymentDetail"></property>
+    </bean>
+    <bean id="reportPaymentDetailTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="reportPaymentDetailTaskBean" />
+        <property name="cronExpression" value="0 40 2 * * ?" />
+    </bean>
+    <!-- 实付明细 -->
+    
+    <!-- 引导消息(昨日数据) -->
+    <bean id="investorGuidTipsYesterdayTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="investorGuidTipsTask"></property>
+        <property name="targetMethod" value="sendYesterdayDataMessage"></property>
+    </bean>
+    <bean id="investorGuidTipsYesterdayTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="investorGuidTipsYesterdayTaskBean" />
+        <property name="cronExpression" value="0 0 16 * * ?" />
+    </bean>
+	<!-- 引导消息(昨日数据) -->
+	
+	<!-- 引导消息(历史数据) -->
+    <bean id="investorGuidTipsHistoryTaskBean" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    	<property name="targetObject" ref="investorGuidTipsTask"></property>
+        <property name="targetMethod" value="sendHistoryDateMessage"></property>
+    </bean>
+    <bean id="investorGuidTipsHistoryTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean"> 
+ 	    <property name="jobDetail" ref="investorGuidTipsHistoryTaskBean" />
+        <property name="cronExpression" value="0 30 16 ? * MON,THU" />
+    </bean>
+	<!-- 引导消息(历史数据) -->
+</beans>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceSubmitTenderDao">
+	<resultMap id="getMap"
+		type="com.mobanker.financial.entity.FinanceSubmitTender">
+	</resultMap>
+	
+	
+	<select id="getDataByDate" parameterType="string" resultType="string">
+		SELECT DISTINCT fst.uid FROM finance_submit_tender fst left join finance_invest_user fiu on (fst.uid=fiu.uid) WHERE fiu.user_type != '2' and
+		 <![CDATA[ DATE_FORMAT(fst.add_time, '%Y-%m-%d') =  DATE_FORMAT(#{0}, '%Y-%m-%d')  ]]>
+	</select>
+	
+	<select id="getTotalAmountBySid" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender WHERE sid = #{0}
+	</select>
+	
+	<select id="getAllInvestUsers" resultType="string">
+		SELECT DISTINCT fst.uid FROM finance_submit_tender fst left join finance_invest_user fiu on (fst.uid=fiu.uid) where fiu.user_type !='2'
+	</select>
+	
+	<!-- 获取累计所有投资金额 -->
+	<select id="getTotalInvestAmount" resultType="java.math.BigDecimal">
+		 SELECT IFNULL(SUM(fst.amount),0) FROM finance_submit_tender fst left join finance_invest_user fiu on (fst.uid=fiu.uid) where fiu.user_type != '2'
+	</select>
+	
+	<select id="gethistoryInvestNum" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM finance_submit_tender WHERE uid = #{0}
+	</select>
+	
+	<select id="getUserInvestNum" parameterType="string" resultType="int">
+		SELECT IFNULL(COUNT(1),0) FROM finance_submit_tender WHERE uid = #{0}
+			 AND DATE(add_time) &gt;= DATE(#{1})  
+			 AND DATE(add_time) &lt;= DATE(#{1})
+	</select>
+	
+		<!-- 获取某日所有投资用户数量 -->
+	<select id="getAllTenderUserNum" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM (SELECT DISTINCT fst.uid FROM finance_submit_tender fst left join finance_invest_user fiu on (fst.uid=fiu.uid) WHERE
+		fiu.user_type != '2' and DATE(fst.add_time) &gt;= DATE(#{0}) 
+			AND DATE(fst.add_time) &lt;= DATE(#{0})) t
+	</select>
+	
+	<select id="getUserAddTotalAmount" parameterType="string" resultType="java.math.BigDecimal">
+	   SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender WHERE uid = #{0}
+		AND DATE(add_time) &gt;= DATE(#{1}) 
+		AND DATE(add_time) &lt;= DATE(#{1})
+	</select>
+	
+	<select id="getAllUserAddTotalAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender fst left join finance_invest_user fiu on (fst.uid=fiu.uid) WHERE fiu.user_type != '2' and
+		 	DATE(fst.add_time) &gt;= DATE(#{0}) 
+			AND DATE(fst.add_time) &lt;= DATE(#{0})
+	</select>
+	
+		<!-- 获取某日ios投资用数量 -->
+	<select id="getIOSInvestNum" parameterType="string" resultType="int">
+		SELECT COUNT(1) FROM finance_submit_tender WHERE uid = #{0} 
+			AND DATE(add_time) &gt;= DATE(#{1})
+			AND DATE(add_time) &lt;= DATE(#{1})
+	</select>
+	
+		<!-- 获取某日所有ios用户投资金额 -->
+	<select id="getIOSInvestAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender WHERE uid = #{0} 
+			AND DATE(add_time) &gt;= DATE(#{1})
+			AND DATE(add_time) &lt;= DATE(#{1})
+	</select>
+	
+		<!-- 获取ios累计用户投资金额 -->
+	<select id="getIOSTotalInvestAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender WHERE uid = #{0} 
+		AND DATE(add_time) &gt;= DATE(#{1})
+		AND DATE(add_time) &lt;= DATE(#{1})
+	</select>
+	
+	<!-- 获取ios累计投资用数量 -->
+	<select id="getIOSTotalInvestNum" parameterType="string" resultType="string">
+		SELECT DISTINCT uid FROM finance_submit_tender WHERE uid = #{0} and DATE(add_time) &gt;= DATE(#{1})
+		and DATE(add_time) &lt;=DATE(#{1})
+	</select>
+	
+		<!-- 获取某日所有投资用户 -->
+	<select id="getChannelTotalInvestNums" parameterType="string" resultType="string">
+		SELECT DISTINCT uid FROM finance_submit_tender where DATE(add_time) &gt;= DATE(#{1})
+		and DATE(add_time) &lt;=DATE(#{1})
+	</select>
+	
+	<select id="getChannelTotalInvestAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_submit_tender WHERE uid = #{0} AND DATE(add_time) &gt;= DATE(#{1})
+		and DATE(add_time) &lt;=DATE(#{1})
+	</select>
+</mapper>

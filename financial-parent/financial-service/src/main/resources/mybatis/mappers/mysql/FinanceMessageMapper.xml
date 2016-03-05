@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceMessageDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceMessage">
+	</resultMap>
+	
+	<select id="getAllUnSendMessage" parameterType="String" resultMap="getMap" flushCache="true">
+		SELECT 
+		  * 
+		FROM
+		  `finance_message`
+		WHERE send_status = '0'
+	</select>
+</mapper>

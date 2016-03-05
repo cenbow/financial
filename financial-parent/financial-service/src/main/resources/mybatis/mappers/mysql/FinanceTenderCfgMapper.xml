@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceTenderCfgDao">
+	<resultMap id="getMap"
+		type="com.mobanker.financial.entity.FinanceTenderCfg">
+	</resultMap>
+	
+	<select id="getgetAllTenderAmount" parameterType="string" resultType="java.math.BigDecimal">
+		SELECT IFNULL(SUM(amount),0) FROM finance_tender_cfg WHERE DATE(invite_time) &gt;= DATE(#{0}) 
+		AND DATE(invite_time) &lt;= DATE(#{0}) 
+	</select>
+	
+	<select id="getDailyTenderTotalAmount" parameterType="string" resultType="com.mobanker.financial.vo.DailyTenderAmountVo">
+		SELECT id, IFNULL(SUM(amount),0) totalAmount FROM finance_tender_cfg WHERE DATE(invite_time) &gt;= DATE(#{0}) AND DATE(invite_time) &lt;= DATE(#{0})  GROUP BY id
+	</select>
+	
+	<select id="getTotalTenderAmount" resultType="java.math.BigDecimal">
+		 SELECT IFNULL(SUM(amount),0) FROM finance_tender_cfg	
+	</select>
+	
+	<select id="getFinanceTenderCfg" parameterType="String" resultMap="getMap" flushCache="true">
+		select * from finance_tender_cfg where id = #{tenderId}
+	</select>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceTradeDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceTrade">
+	</resultMap>
+
+	<!-- 获取交易列表用以产生实收明细报表数据 -->
+	<select id="getCollectionListByDate" parameterType="String"
+		resultMap="getMap">
+		SELECT
+		t.`id`,
+		t.`tender_id`,
+		t.`order_no`,
+		t.`uid`,
+		t.`amount`,
+		t.`trade_type`,
+		t.`business_type`,
+		t.`status`,
+		t.`batch_pay_no`
+		FROM
+		finance_trade t
+		WHERE `business_type` = '1'
+		AND `trade_type` = 'collect'
+		AND DATE_FORMAT(create_time, 'Y-%m-%d') = DATE_FORMAT(#{date},'Y-%m-%d')
+		ORDER BY t.`order_no`
+	</select>
+</mapper>

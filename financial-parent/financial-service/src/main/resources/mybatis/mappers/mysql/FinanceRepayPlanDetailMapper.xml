@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceRepayPlanDetailDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceRepayPlanDetail">
+	</resultMap>
+
+	<select id="getRepayDetailListByDate" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  finance_repay_plan_detail 
+		WHERE STATUS = '0' 
+		  AND DATE_FORMAT(refund_time, '%Y-%m-%d') = DATE_FORMAT(#{repayDate},'%Y-%m-%d') 
+	</select>
+
+	<select id="getRepayDetailListBySuccessDate" parameterType="String" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  finance_repay_plan_detail 
+		WHERE DATE_FORMAT(refund_success_time, '%Y-%m-%d') = DATE_FORMAT(#{repayDate},'%Y-%m-%d') 
+	</select>
+</mapper>

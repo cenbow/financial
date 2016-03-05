@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>理财定时任务执行</title>
+<link rel="stylesheet" href="css/common.css" />
+</head>
+<div class="container">
+	<div id="" class="list">
+		<h3>执行定时任务</h3>
+		<ul>
+			<li>地 址 ：<input id="urlAdress" type="text" value="http://192.168.1.242:8080/lc-job/financialJob/executeTask" /></li>
+			<li>参 数 ：<input id="param" type="text" /></li>
+			<li>备 选 ：<input id="bakParam" type="text" /></li>
+			<li>任 务： <select id="type">
+					<option value="1">标的发布任务</option>
+					<option value="2">招标完成任务</option>
+					<option value="3">批量代付到卡</option>
+					<option value="4">收益计算任务</option>
+					<option value="5">开始收益任务</option>
+					<option value="6">密码解锁任务</option>
+					<option value="7">还款统计任务</option>
+					<option value="8">实收明细任务</option>
+					<option value="9">实付明细任务</option>
+				    <option value="10">引导消息任务</option>
+				    <option value="11">消息扫描任务</option>
+				    <option value="12">交易修复任务</option>
+				    <option value="13">代付到卡修复</option>
+				    <option value="14">手工还款任务</option>
+
+				    <option value="100">手工插入日报</option>
+				    <option value="101">手工插入渠道</option>
+
+			</select>
+			</li>
+		</ul>
+		<a id="execute" class="save" onclick="execute()">执 行</a>
+	</div>
+</div>
+
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+	function execute() {
+		var url = $("#urlAdress").val();
+		var param = $("#param").val();
+		var type = $("#type").val();
+		var bakParam = $("#bakParam").val();
+		var jsonData = {
+			param : param,
+			type : type,
+			bakParam : bakParam
+		};
+		$.ajax({
+			type : "POST",
+			url : url,
+			data : jsonData,
+			dataType : "json",
+			success : function() {
+				alert("执行完毕!");
+			},
+			error : function() {
+				alert("执行完毕!");
+			}
+		})
+	}
+</script>
+</body>
+</html>

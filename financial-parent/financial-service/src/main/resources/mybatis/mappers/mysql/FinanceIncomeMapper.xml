@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mobanker.financial.dao.FinanceIncomeDao">
+	<resultMap id="getMap" type="com.mobanker.financial.entity.FinanceIncome">
+	</resultMap>
+
+	<!--获取用户余额大于10的收益列表-->
+	<select id="getAvailableGreaterThanZeroIncome" resultMap="getMap" flushCache="true">
+		SELECT 
+		  * 
+		FROM
+		  finance_income t 
+		WHERE t.`savingpot_available` > 10 
+	</select>
+	
+	<!-- 获取昨日收益大于0的收益列表 -->
+	<select id="getYesdayEarnsGreaterThanZeroIncome" parameterType="String" resultMap="getMap" flushCache="true">
+		SELECT 
+		  * 
+		FROM
+		  `finance_income` t 
+		WHERE t.`savingpot_yesterday_earnings` > 0 
+		  AND DATE(t.`update_time`) = DATE(#{date})
+	</select>
+	
+	<!-- 获取理财收益大于0的收益列表 -->
+	<select id="getEarnsGreaterThanZeroIncome" resultMap="getMap">
+		SELECT 
+		  * 
+		FROM
+		  `finance_income` t 
+		WHERE t.`received_benefits` + t.`uncollected_revenue` > 0 
+	</select>
+	
+	<select id="getSavingpotAvailableBalance" resultType="java.math.BigDecimal">
+	  	select ifnull(sum(savingpot_available),0) from finance_income
+	</select>
+</mapper>
