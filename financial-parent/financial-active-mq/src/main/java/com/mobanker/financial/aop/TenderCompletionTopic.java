@@ -59,7 +59,7 @@ public class TenderCompletionTopic {
 	@Resource
 	private ActiveMQQueue completionTenderQueue;
 
-	@Pointcut("execution(* com.mobanker.financial.job.service.TenderCompletionService.tenderComplete(..))")
+	@Pointcut("execution(* com.mobanker.financial.job.service.TenderCompletionService.tenderComplete(..)) || execution(* com.mobanker.financial.job.service.TenderCompletionService.tenderCompteteById(..))")
 	public void tenderComplete() {
 
 	}

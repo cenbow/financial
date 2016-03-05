@@ -1,6 +1,7 @@
 package com.mobanker.financial.job.service;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -8,8 +9,10 @@ import javax.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.mobanker.financial.common.enums.TenderStatus;
+import com.mobanker.financial.common.enums.TenderSyncStatus;
 import com.mobanker.financial.entity.FinanceTenderCfg;
 import com.mobanker.financial.service.FinanceTenderCfgService;
 
@@ -79,5 +82,24 @@ public class TenderReleaseService {
 		tenderCfg.setStatus(TenderStatus.TENDERING.toString());
 		tenderCfg.setSyncStatus("1");
 		financeTenderCfgService.update(tenderCfg);
+	}
+	
+	/**
+	 * 标的同步成功通知
+	 * @param map
+	 */
+	public void receive(HashMap<String, String> map) {
+		String tenderId = map.get("id");
+		if (!StringUtils.isEmpty(tenderId)) {
+			FinanceTenderCfg tenderCfg = financeTenderCfgService.getById(tenderId);
+			if (tenderCfg != null) {
+				tenderCfg.setSyncStatus(TenderSyncStatus.SUCCESS.toString());
+				financeTenderCfgService.update(tenderCfg);
+			} else {
+				logger.error("{}标的同步失败,标的不存在 :{}", logPrefix, tenderId);
+			}
+		} else {
+			logger.error("{}标的同步失败 :{}", logPrefix, "通知结果不正确!");
+		}
 	}
 }

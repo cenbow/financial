@@ -33,6 +33,7 @@ import com.mobanker.financial.common.message.MessageCenter;
 import com.mobanker.financial.entity.FinanceFreeze;
 import com.mobanker.financial.entity.FinanceIncome;
 import com.mobanker.financial.entity.FinanceInviteTenderEnd;
+import com.mobanker.financial.entity.FinancePatchTender;
 import com.mobanker.financial.entity.FinanceRepayPlan;
 import com.mobanker.financial.entity.FinanceRepayPlanDetail;
 import com.mobanker.financial.entity.FinanceSubmitTender;
@@ -44,6 +45,7 @@ import com.mobanker.financial.service.FinanceFreezeService;
 import com.mobanker.financial.service.FinanceIncomeService;
 import com.mobanker.financial.service.FinanceInvestUserService;
 import com.mobanker.financial.service.FinanceInviteTenderEndService;
+import com.mobanker.financial.service.FinancePatchTenderService;
 import com.mobanker.financial.service.FinanceRefundStatisticsService;
 import com.mobanker.financial.service.FinanceRepayPlanDetailService;
 import com.mobanker.financial.service.FinanceRepayPlanService;
@@ -96,6 +98,8 @@ public class TenderCompletionService {
 	private MessageCenter messageCenter;
 	@Resource
 	private FinanceWarningService financeWarningService;
+	@Resource
+	private FinancePatchTenderService patchTenderService;
 
 	public List<FinanceTenderCfg> tenderComplete() {
 
@@ -207,7 +211,7 @@ public class TenderCompletionService {
 		BigDecimal inputAmount = (BigDecimal) rtnMap.get("totalAmount");
 		BigDecimal finalYield = (BigDecimal) rtnMap.get("finalYield");
 		List<FinanceSubmitTender> submitTenderList = (List<FinanceSubmitTender>) rtnMap.get("submitTenderList");
-		doRepayPlanProcess(tenderCfg, inputAmount, finalYield, submitTenderList);
+		doRepayPlanProcess(tenderCfg, inputAmount.setScale(2, BigDecimal.ROUND_HALF_UP), finalYield, submitTenderList);
 	}
 
 	/**
@@ -404,7 +408,7 @@ public class TenderCompletionService {
 			}
 
 			BigDecimal investorYield = submitTender.getFinalYield(); // 投资人利率
-			BigDecimal amount = submitTender.getAmount();
+			BigDecimal amount = submitTender.getAmount().setScale(2, BigDecimal.ROUND_HALF_UP);
 			String orderNo = submitTender.getOrderNo();
 			BigDecimal investorInterest = incomeService.calculateIncome(amount, BigDecimal.ONE, investorYield); // 单个投资人的利息
 
@@ -567,6 +571,63 @@ public class TenderCompletionService {
 			income.setAccumulatedIncome(income.getAccumulatedIncome().add(uncollectedRevenue)); // 累计收益
 
 			incomeService.update(income);
+		}
+	}
+	
+	/**
+	 * vip理财人补标
+	 * @param map
+	 */
+	public void receiveVipSubmitTender(HashMap<String, String> map) {
+
+		logger.debug("{}vip理财人补标:{}", logPrefix, map.toString());
+		
+		// 为了兼容新老字段userId---uid、needAmount--amount
+		String userId = map.get("userId");
+		if (userId == null) {
+			userId = map.get("uid");
+		}
+		String tenderId = map.get("id");
+		String amount = map.get("needAmount"); // 补标金额
+		if (amount == null) {
+			amount = map.get("amount");
+		}
+		
+		String patchBidId = map.get("patchBidId");
+		String parentPatchBidId = map.get("parentPatchBidId");
+		
+		if (!StringUtils.isEmpty(parentPatchBidId)) {
+			FinancePatchTender parentTender = patchTenderService.getById(parentPatchBidId);
+			if (parentTender != null) {
+				parentTender.setDeleted("1");
+				patchTenderService.update(parentTender);
+			}
+		}
+
+		FinanceTenderCfg tenderCfg = tenderCfgService.getById(tenderId);
+		if (tenderCfg != null) {
+
+			FinancePatchTender patchTender = new FinancePatchTender();
+			if (!StringUtils.isEmpty(patchBidId)) {
+				patchTender.setId(patchBidId);
+			}
+			patchTender.setSid(tenderId);
+			patchTender.setUid(userId);
+			patchTender.setAmount(new BigDecimal(amount));
+			patchTender.setCouponId("");
+			patchTender.setFinalYield(BigDecimal.ZERO);
+			patchTender.setAddTime(new Date());
+			patchTender.setBearingTime(tenderCfg.getBeginTime());
+			patchTender.setExpireTime(tenderCfg.getEndTime());
+			patchTender.setEarnedIncome(BigDecimal.ZERO);
+			patchTender.setExpectIncome(BigDecimal.ZERO);
+			patchTender.setNextIncome(BigDecimal.ZERO);
+			String orderNo = BillNoUtils.GenerateBillNo();
+			patchTender.setOrderNo(orderNo);
+			patchTenderService.insert(patchTender);
+
+		} else {
+			logger.error("{}vip理财人补标无标的{}", logPrefix, tenderId);
 		}
 	}
 }

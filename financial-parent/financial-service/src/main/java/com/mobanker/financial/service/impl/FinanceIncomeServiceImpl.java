@@ -31,7 +31,7 @@ public class FinanceIncomeServiceImpl extends BaseServiceImpl<FinanceIncome> imp
 	@Override
 	public BigDecimal calculateIncome(BigDecimal amount, BigDecimal timeLimit, BigDecimal yield) {
 		BigDecimal result = amount.multiply(timeLimit).multiply(yield).divide(new BigDecimal("12"), 2).divide(new BigDecimal("100"), 2);
-		result.setScale(2, BigDecimal.ROUND_HALF_UP);
+		result = result.setScale(2, BigDecimal.ROUND_HALF_UP);
 		return result;
 	}
 

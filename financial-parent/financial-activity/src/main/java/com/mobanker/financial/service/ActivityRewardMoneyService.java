@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 
 import org.apache.activemq.command.ActiveMQQueue;
 import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ import com.mobanker.financial.mq.ActiveMQProducer;
  * @date 2015.12.22
  */
 @Service
-@Aspect
+//@Aspect
 public class ActivityRewardMoneyService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ActivityRewardMoneyService.class);

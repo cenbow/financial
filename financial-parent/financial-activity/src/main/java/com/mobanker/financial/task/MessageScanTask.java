@@ -116,6 +116,6 @@ public class MessageScanTask implements ApplicationListener<ContextRefreshedEven
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		buildJob();
+		//buildJob();
 	}
 }

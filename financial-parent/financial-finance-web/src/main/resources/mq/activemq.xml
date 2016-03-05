@@ -29,7 +29,7 @@
 		</constructor-arg>
 	</bean>
 
-	<!-- 补标队列 -->
+	<!-- 通知补标队列 -->
 	<bean id="completionTenderQueue" class="org.apache.activemq.command.ActiveMQQueue">
 		<!-- 设置消息队列的名字 -->
 		<constructor-arg>
@@ -72,21 +72,54 @@
 			<value>VirtualTopic.ActivitySuccNoticeTopic</value>
 		</constructor-arg>
 	</bean>
-
-	<!-- 打款成功消息监听 -->
-	<bean id="rewardMoneyQueueListener"
+	
+	<!-- 财务收到标的成功通知 -->
+	<bean id="bidSyncSuccNoticeQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg>
+			<value>Producer.Financial.BidSyncSuccNoticeQueue</value>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 补标 -->
+	<bean id="bidPatchSuccNoticeQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 设置消息队列的名字 -->
+		<constructor-arg>
+			<value>Producer.Financial.BidPatchSuccNoticeQueue</value>
+		</constructor-arg>
+	</bean>
+	
+	<!--标的发布同步成功通知 -->
+	<bean id="tenderReleaseListener"
 		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
 		<property name="delegate">
-			<bean class="com.mobanker.financial.service.ActivityRewardMoneyService" />
+			<bean class="com.mobanker.financial.job.service.TenderReleaseService" />
 		</property>
 		<property name="defaultListenerMethod" value="receive" />
 	</bean>
 
-	<bean id="rewardMoneyQueueListenerContainer"
+	<bean id="tenderReleaseQueueListenerContainer"
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="activitySuccNoticeTopic" />
-		<property name="messageListener" ref="rewardMoneyQueueListener" />
-		<property name="pubSubDomain" value="true" />
+		<property name="destination" ref="bidSyncSuccNoticeQueue" />
+		<property name="messageListener" ref="tenderReleaseListener" />
+		<property name="pubSubDomain" value="false"/>
+	</bean>
+	
+	<!--vip补标信息监听 -->
+	<bean id="bidPatchSuccNoticeListener"
+		class="org.springframework.jms.listener.adapter.MessageListenerAdapter">
+		<property name="delegate">
+			<bean class="com.mobanker.financial.job.service.TenderCompletionService" />
+		</property>
+		<property name="defaultListenerMethod" value="receiveVipSubmitTender" />
+	</bean>
+
+	<bean id="bidPatchSuccNoticeListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="jmsConnectionFactory" />
+		<property name="destination" ref="bidPatchSuccNoticeQueue" />
+		<property name="messageListener" ref="bidPatchSuccNoticeListener" />
+		<property name="pubSubDomain" value="false"/>
 	</bean>
 </beans>  
